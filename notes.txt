@@ -1,0 +1,52 @@
+
+                                                                                                                                                                                                                
+                     extract from left and send to right                                                                                   
+               [@] > [jssfdgdf]                                                                                         
+                                                                                                        
+
+
+  ######################################
+  #	      ____________text box___      #
+  #       |                     |      #                                                                Ressources
+  #       |class piston:        |      #                                ?./  :
+  #       |   def __init__(name):|     #              [[abc],                  ?./ :
+  #       |      self.color='red'      #               [ghk],                ?./:
+  #       |      self.follow=true      #           _   [asn]]                  ?./ :                         ###############
+  #       |      self.shape=""" |      #          |_|@                  ?./:                         ############?#####
+  #       |  @-->               |      #                                ?./:                       ## :################
+  #       |   """ self.pilot    |      #                                ?./:                       ###########j##### ##
+  #       |    def follow(x,y)  |      #                                                        ################ ###
+  #       |                     |      #                                                          ######u##########
+  #       |    def toggle(on)   |      #                                                          ###############
+  #       |                     |      #       
+  #       |    def obey(cmd)    |      |  door     
+  #       |                     |      |                       [12]+[45]=
+  #       |    def build(tasks) |      |           piston
+  #       |_____________________|      #           @--]
+  #                                    #                                                                         cant be pushed
+  #     message                        #                                     when char colide => red +dammage (# rock solid, az,;... less solid, ] push without dammage, { stick one  )
+  #   $>.                              #                  convertor                                            ( ^><v dont take damage, %'''', ))) pass through but shift
+  ######################################          [  fuel  ]~[ ]=[H]
+                                                        12345687     
+              lake canot cross, need bridge
+			  or boat (take in front put in back)
+															                       <@>                                Pipe
+											\|				 
+			    )(((()					     |                  ~~~~~~                                                         ( ((((((((((((((((( )
+			  ()(()()()()()			        (|)					~~~~~~	                                                     ( )
+			 ))())(()(()()()												                                             ( )
+			)((()()())())())()												                                             ( )
+															$                                                            ( )
+															                                                             ( )
+										  c	c 				                                                             ( )
+											c	 c c		                                                             ( )
+											 c	 c			 
+                                              c c
+                                               c
+                                               c
+                                              (c)
+                                              
+                                              
+                                              
+                                              
+                                              
