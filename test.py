@@ -1,83 +1,77 @@
-# Simplified BSD License, Copyright 2011 Al Sweigart
+# SNAKES GAME
+# Use ARROW KEYS to play, SPACE BAR for pausing/resuming and Esc Key for exiting
 
-import pygcurse, pygame, sys
-from pygame.locals import *
-import random
-#---------PARAMETERS----------
-w = 40
-h = 25
-win = pygcurse.PygcurseWindow(w,h)
-win.autoblit = False
-pygame.key.set_repeat(1,1)
-screenColors = ('black','white')
+import curses
+from curses import KEY_RIGHT, KEY_LEFT, KEY_UP, KEY_DOWN
+from random import randint
 
 
-#--------OBJECTS------------
-class Entity:
-    def __init__(self,char='@',x=w//2,y=h//2):
-        self.x = x
-        self.y = y
-        self.char=char
-    def pilot(self,event):
-        prev = self.x,self.y
-        if event.key == K_UP:
-            self.move(prev,(0,1))
-        elif event.key == K_DOWN:
-            self.move(prev,(0,-1))
-        elif event.key == K_LEFT:
-            self.move(prev,(-1,0))
-        elif event.key == K_RIGHT:
-            self.move(prev,(1,0))
-        
-    def move(self,prev,shift):
-        self.x=(self.x+shift[0])%w
-        self.y=(self.y+shift[1])%h
-        win.putchars(self.char,x=self.x,y=self.y)
-        win.putchars(win.world.screen[prev],prev[0],prev[1])
+curses.initscr()
+win = curses.newwin(20, 60, 0, 0)
+win.keypad(1)
+curses.noecho()
+curses.curs_set(0)
+win.border(0)
+win.nodelay(1)
 
+key = KEY_RIGHT                                                    # Initializing values
+score = 0
 
-#------------INIT----------------
-mousex = mousey = 0
-win.setscreencolors(*screenColors, clear=True)
-bob =Entity() 
-world = World(win)
-world.generateScreen()
-world.printScreen()
-#------------Main Loop-----------
-while True:
-    for event in pygame.event.get(): # the event loop
-        if event.type == QUIT or event.type == KEYDOWN and event.key == K_ESCAPE:
-            pygame.quit()
-            sys.exit()
+snake = [[4,10], [4,9], [4,8]]                                     # Initial snake co-ordinates
+food = [10,20]                                                     # First food co-ordinates
 
-        if event.type == KEYDOWN:
-            if event.key == K_p:
-                win.fullscreen = not win.fullscreen
-            elif event.key == K_d:
-                win._debugchars()
-            else:
-                bob.pilot(event)
-                
-        elif event.type == MOUSEMOTION:
-            mousex, mousey = win.getcoordinatesatpixel(event.pos)
-   
-    if world.moveScreen(mousex, mousey):
-       world.generateScreen()
-       world.printScreen()
+win.addch(food[0], food[1], '*')                                   # Prints the food
+
+while key != 27:                                                   # While Esc key is not pressed
+    win.border(0)
+    win.addstr(0, 2, 'Score : ' + str(score) + ' ')                # Printing 'Score' and
+    win.addstr(0, 27, ' SNAKE ')                                   # 'SNAKE' strings
+    win.timeout(150 - (len(snake)/5 + len(snake)/10)%120)          # Increases the speed of Snake as its length increases
     
-  
+    prevKey = key                                                  # Previous key pressed
+    event = win.getch()
+    key = key if event == -1 else event 
+
+
+    if key == ord(' '):                                            # If SPACE BAR is pressed, wait for another
+        key = -1                                                   # one (Pause/Resume)
+        while key != ord(' '):
+            key = win.getch()
+        key = prevKey
+        continue
+
+    if key not in [KEY_LEFT, KEY_RIGHT, KEY_UP, KEY_DOWN, 27]:     # If an invalid key is pressed
+        key = prevKey
+
+    # Calculates the new coordinates of the head of the snake. NOTE: len(snake) increases.
+    # This is taken care of later at [1].
+    snake.insert(0, [snake[0][0] + (key == KEY_DOWN and 1) + (key == KEY_UP and -1), snake[0][1] + (key == KEY_LEFT and -1) + (key == KEY_RIGHT and 1)])
+
+    # If snake crosses the boundaries, make it enter from the other side
+    if snake[0][0] == 0: snake[0][0] = 18
+    if snake[0][1] == 0: snake[0][1] = 58
+    if snake[0][0] == 19: snake[0][0] = 1
+    if snake[0][1] == 59: snake[0][1] = 1
+
+    # Exit if snake crosses the boundaries (Uncomment to enable)
+    #if snake[0][0] == 0 or snake[0][0] == 19 or snake[0][1] == 0 or snake[0][1] == 59: break
+
+    # If snake runs over itself
+    if snake[0] in snake[1:]: break
+
     
-    #win.setscreencolors(*screenColors, clear=True)
-    #win.fill(bgcolor='red', region=(15, 10, 5, 5))
-    #win.addshadow(51, (15, 10, 5, 5), bob.x=bob.x, bob.y=bob.y)
-
-    #win.drawline((6,6), (mousex, mousey), bgcolor='red')
-    #win.drawline((6,6), (mousex, mousey), char='+', fgcolor='yellow', bgcolor='green')
-
-   # win.cursor = 0, win.height-3
-    #win.write('Use mouse to move line, arrow keys to move shadow, p to switch to fullscreen.')
-    #win.cursor = 0, win.height-1
+    if snake[0] == food:                                            # When snake eats the food
+        food = []
+        score += 1
+        while food == []:
+            food = [randint(1, 18), randint(1, 58)]                 # Calculating next food's coordinates
+            if food in snake: food = []
+        win.addch(food[0], food[1], '*')
+    else:    
+        last = snake.pop()                                          # [1] If it does not eat the food, length decreases
+        win.addch(last[0], last[1], ' ')
+    win.addch(snake[0][0], snake[0][1], '#')
     
-
-    win.blittowindow()
-    pygame.time.wait(50)
+curses.endwin()
+print("\nScore - " + str(score))
+print("http://bitemelater.in\n")
