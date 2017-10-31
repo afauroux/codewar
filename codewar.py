@@ -25,24 +25,26 @@ def main(screen):
         key = world.getch()
         if key == ord('q'):
             break
-        cursor = world.getyx() 
-        if cursor[0]<1 and y > 2:
-            y+=-1
-        if cursor[0]>h-2 and y < h-2:
-            y+=1
-        if cursor[1]<1 and x> 2:
-            x+=-1
-        if cursor[0]>w-2 and x<w-2:
-            x+=1
+    
+    
+        prevcursor = world.getyx()
+        newcursor = move(prevcursor,key)
+    
+        if newcursor[0]<2 or newcursor[0]>h-3 or newcursor[1]>w-3 or newcursor[1]<2:
+            y,x = move((y,x),key)
+            world.move(*prevcursor)
         else:
-            world.move(cursor[0]+ 
-                (key == KEY_DOWN and 1)+ 
-                (key == KEY_UP and -1), 
-               	cursor[1] +
-               	 (key == KEY_LEFT and -1)+
-                 (key == KEY_RIGHT and 1))
-            
+            world.move(*newcursor)
+        
         world.refresh(y,x,1,1,h-2,w-2)
-        #stdscr.getkey()                   
+        #stdscr.getkey()
+                   
+def move(coord,key):
+    return (coord[0] +
+    (key == KEY_DOWN and 1)+
+    (key == KEY_UP and -1),
+    coord[1] +
+    (key == KEY_LEFT and -1)+
+    (key == KEY_RIGHT and 1))
 
 wrapper(main)
