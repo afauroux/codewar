@@ -37,7 +37,7 @@ def main(screen):
         newcursor = move(prevcursor,key,(0,0),pad_size)
         world.move(*newcursor)
 
-        if any(newcursor >= (screen_pos+screen_size)):
+        if any(newcursor >= (screen_pos+screen_size))):
             screen_pos += newcursor - (screen_pos+screen_size)
 
         if any(newcursor <= screen_pos):
