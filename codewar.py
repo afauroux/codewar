@@ -4,9 +4,9 @@ from curses import wrapper,KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN
 import numpy as np
 import logging
 
-logging.basicConfig(filename='log.txt',level=logging.DEBUG)
-logging.basicConfig(format='%(asctime)s %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S')
+logging.basicConfig(filename='log.txt',level=logging.DEBUG,
+                    format='[%(asctime)s] %(message)s',
+                    datefmt='%I:%M:%S')
 
 Vect = np.array #shortcuts ;-)
 log = logging.info    
@@ -45,8 +45,6 @@ def main(screen):
 
     
         if any(newcursor >= (screen_pos+screen_size)):
-            log('screen_pos += newcursor - (screen_pos+screen_size)')
-            log('{} += {} - ({}+{})'.format(screen_pos,newcursor,screen_pos,screen_size))
             vec = newcursor - (screen_pos+screen_size)
             #we keep only the coord that is outside the screen 
             screen_pos += [c+1 if c>=0 else 0 for c in vec] 
@@ -55,7 +53,8 @@ def main(screen):
         if any(newcursor < screen_pos):
             vec = newcursor - screen_pos
             screen_pos += [c if c<0 else 0 for c in vec]
-        
+            
+        log('screen_pos = {}    cursor = {}'.format(screen_pos,newcursor))
     
         #newyx = move((y,x),key,(0,0),pad_size-screen_size)
             
