@@ -1,23 +1,66 @@
 import re
 #from tree import Tree
 #from animal import Animal
-from numpy.lib.stride_tricks import as_strided
+import random 
+import numpy as np
+V = np.array
 
 class AbstractEntitie:
     root_regex = "(.)"
     
     def __init__(self,world, initPos, regex_groups):
         self.world = world
-        self.coord = initPos
+        self.coord = np.array(initPos)
         self.regex_groups = regex_groups
     
-
+    def update(self):
+      while c in dna:
+        if c == '.':
+          yield 
+        if 
+class Head(object):
+    def __init__(self,animal):
+        self.pos = (0,0)
+        self.mem = [0]*9
+        self.animal = animal
+        
+        
 class Animal(AbstractEntitie):
     root_regex = '&'
-    pass
+    dna = ',.><[]+-'
+   
     
+    def headto2d(i):
+        return 
+    def exec(self,cmd):
+        if cmd == ',':
+            self.head = self.world.getch(*self.head.coord)
+        elif cmd=='.'
+            self.world.addch(*self.head.coord)
+    
+    
+    
+             
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
+        self.mem[0]
+        
+        
+    def update(self):
+      while self.alive:
+        dirs = [V((i,j)) if i*j==0 else V((0,0)) for i in [-1,1,0] for j in [-1,1,0]]
+        newcoord = self.coord + random.choice(dirs)
+        yield [
+          [' ',self.coord],
+          ['&',newcoord]
+        ]
+        self.coord = newcoord
+
+        
+
+
 class Tree(AbstractEntitie):
-    root_regex = '{(.)}'
+    root_regex = '({(.)})'
     
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
@@ -36,9 +79,9 @@ def find_all_entities(world, species = {Tree, Animal}):
             for res in results:
                 entities.append(specie(world,res.span(),res.groups()))
     return entities
-if __name__ == '__main__' or True:           
-    world = lambda : None
-    world.string = """
+  
+class World(object):
+    string = """
                                                                                          
                                                                                          
                                                                                          
@@ -54,5 +97,12 @@ if __name__ == '__main__' or True:
                                                                                          
                                                                                          
     """
+    
+    def update():
+      
+    
+if __name__ == '__main__' or True:           
+    world = World()
+    
 
     entities = find_all_entities(world)
