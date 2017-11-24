@@ -11,6 +11,12 @@ logging.basicConfig(filename='log.txt',level=logging.DEBUG,
 Vect = np.array #shortcuts ;-)
 log = logging.info    
 
+#class Vect(tuple):
+#    def __init__(self,*args):
+#        super(Vect,self).__init__(*args)
+#    def __add__(s,o):
+#        return Vect(s.x+o.x,s.y+o.y)
+
 def main(screen):
 
     # Clear screen
@@ -38,17 +44,25 @@ def main(screen):
         key = world.getch()
         if key == ord('q'):
             break
-    
+
+
         prevcursor = Vect(world.getyx())
+
         newcursor = move(prevcursor,key,(0,0),pad_size)
         world.move(*newcursor)
 
-    
-        if any(newcursor >= (screen_pos+screen_size)):
-            vec = newcursor - (screen_pos+screen_size)
-            #we keep only the coord that is outside the screen 
-            screen_pos += [c+1 if c>=0 else 0 for c in vec] 
+        try:                
+            world.addstr(*prevcursor,ch(key))
+        except:
            
+ world.addstr(*prevcursor,"err") 
+            
+            
+        if any(newcursor >= 
+	(screen_pos+screen_size)):
+            vec = newcursor - (screen_pos+screen_size)
+            #we keep only the coord that is outside the scr
+            screen_pos += [c+1 if c>=0 else 0 for c in vec] 
 
         if any(newcursor < screen_pos):
             vec = newcursor - screen_pos

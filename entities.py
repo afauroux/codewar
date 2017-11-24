@@ -1,6 +1,6 @@
 import re
-#from tree import Tree
-#from animal import Animal
+from tree import Tree
+#rom animal import Animal
 import random
 import numpy as np
 from Math import *
