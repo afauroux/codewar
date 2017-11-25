@@ -1,15 +1,16 @@
-
+import threading
 import curses
-from curses import wrapper,KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN     
-import numpy as np
-import logging
+from curses import KEY_RIGHT,KEY_LEFT,KEY_UP,KEY_DOWN     
+import numpy as np, numpy.array as Vect
+import logging, logging.info as log
+
 
 logging.basicConfig(filename='log.txt',level=logging.DEBUG,
                     format='[%(asctime)s] %(message)s',
-                    datefmt='%I:%M:%S')
+                    datefmt='%I:%M:%S',
+                    filemode='w')
 
-Vect = np.array #shortcuts ;-)
-log = logging.info    
+
 
 #class Vect(tuple):
 #    def __init__(self,*args):
@@ -17,17 +18,18 @@ log = logging.info
 #    def __add__(s,o):
 #        return Vect(s.x+o.x,s.y+o.y)
 
-def main(screen):
-
-    # Clear screen
+def init(screen):
     curses.noecho()
     curses.cbreak()
     screen.keypad(1) 
     screen.border(0)
     screen.refresh()
 
-    y,x = 0,0
-    h,w = screen.getmaxyx()
+def main(screen):
+
+    
+    y, x = 0,0
+    h, w = screen.getmaxyx()
 
     screen_pos = Vect((y,x))
     screen_size = Vect((h-2,w-2))
@@ -38,7 +40,7 @@ def main(screen):
     world.move(10,10)
     cursor = (10,10)
     world.refresh(x,y,1,1,h-2,w-2)
-    world.keypad(1)
+
 
     while 1:            
         key = world.getch()
@@ -52,17 +54,15 @@ def main(screen):
         world.move(*newcursor)
 
         try:                
-            world.addstr(*prevcursor,ch(key))
-        except:
-           
- world.addstr(*prevcursor,"err") 
+            if 32< key < 128:
+                world.addstr(*prevcursor,chr(key))
+        except Exception as e:
+            log(e)
             
-            
-        if any(newcursor >= 
-	(screen_pos+screen_size)):
+       
+        if any(newcursor >= (screen_pos+screen_size)):  # when cursor on border we move the screen
             vec = newcursor - (screen_pos+screen_size)
-            #we keep only the coord that is outside the scr
-            screen_pos += [c+1 if c>=0 else 0 for c in vec] 
+            screen_pos += [c+1 if c>=0 else 0 for c in vec] # we keep only the coord that is outside the scr
 
         if any(newcursor < screen_pos):
             vec = newcursor - screen_pos
@@ -83,11 +83,15 @@ def move(coord,key,cmin,cmax):
     cmin = np.array(cmin)
     cmax = np.array(cmax)
     
-    shift = ((key == KEY_DOWN and  1)
-             + (key == KEY_UP   and -1),
-             (key == KEY_LEFT and -1)
-             + (key == KEY_RIGHT and 1))
+    shift =  ((key == KEY_DOWN  and  1)
+            + (key == KEY_UP    and -1),
+              (key == KEY_LEFT  and -1)
+            + (key == KEY_RIGHT and  1))
 
-    return  coord + (all(coord+shift>=cmin) and all(coord+shift<cmax) and shift or np.array([0,0]))
-  
-wrapper(main)
+    return (coord + (all(coord + shift >= cmin) 
+            and all(coord + shift < cmax) 
+            and shift or np.array([0,0])))
+
+
+if __name__ == '__main__':   
+    curses.wrapper(main)
